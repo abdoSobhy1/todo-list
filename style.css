@@ -2,6 +2,7 @@
 * {
   box-sizing: border-box;
   font-family: "Be Vietnam Pro", sans-serif;
+  transition: color 0.3s, background-color 0.3s;
 }
 body {
   margin: 0;
@@ -16,13 +17,34 @@ body {
   transition: background-image 0.3s;
 }
 
+body {
+  --bg-color: 0, 0, 0;
+  --bg-inverted: 255, 255, 255;
+  --bg-alt-color: #181818;
+  --title-color: #f3f3f3;
+  --t-title-color: #181818;
+  --alt-color: #d3d3d3;
+  --input-color: #333;
+  --neutral: white;
+}
+
+body[data-theme="light"] {
+  --bg-color: 255, 255, 255;
+  --bg-inverted: 0, 0, 0;
+  --bg-alt-color: #f3f3f3;
+  --title-color: #181818;
+  --alt-color: #333;
+  --input-color: #f3f3f3;
+  --neutral: #181818;
+}
+
 .container {
   --max-width: 1250px;
   --padding: 1rem;
   width: min(var(--max-width), 100% - var(--padding) * 2);
   height: 95%;
   padding: 20px;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(var(--bg-color), 0.7);
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   backdrop-filter: blur(10px);
@@ -32,8 +54,43 @@ body {
   position: relative;
 }
 
+.title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@media screen and (max-width: 768px) {
+  .title {
+    align-items: flex-start;
+  }
+}
+
+body .title .theme .light {
+  display: none;
+}
+
+body[data-theme="light"] .theme .dark {
+  display: none;
+}
+
+.title .theme button {
+  font-size: 1.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  aspect-ratio: 1;
+  width: 56px;
+  transition: 0.3s;
+}
+
+body[data-theme="light"] .title .theme .light {
+  display: inline-flex;
+}
+
 h1 {
-  color: #f3f3f3;
+  color: var(--title-color);
   margin: 0;
   font-size: 40px;
 }
@@ -47,13 +104,13 @@ h1 {
 .title p {
   font-size: 20px;
   font-weight: 500;
-  color: #d3d3d3;
+  color: var(--alt-color);
   margin: 20px 0;
 }
 
 .title input {
   all: unset;
-  color: #f3f3f3;
+  color: var(--title-color);
   font-weight: bold;
   font-size: 26px;
   width: 0;
@@ -62,8 +119,8 @@ h1 {
 }
 
 .title button {
-  background-color: rgba(255, 255, 255, 0);
-  color: #f3f3f3;
+  background-color: rgba(var(--bg-inverted), 0);
+  color: var(--title-color);
   outline: none;
   border: none;
   cursor: pointer;
@@ -75,11 +132,11 @@ h1 {
 }
 
 .title button:hover {
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(var(--bg-color), 0.5);
 }
 
 .add-tasks {
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(var(--bg-color), 0.5);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
   padding: 10px;
@@ -99,17 +156,42 @@ h1 {
   font-size: 15px;
   outline: none;
   border: none;
-  background-color: #333;
-  color: white;
+  background-color: var(--input-color);
+  color: var(--neutral);
 }
 
 .add-tasks input[type="text"]::placeholder {
-  color: #f3f3f3;
+  color: var(--title-color);
+}
+
+.add-tasks input[type="text"].error {
+  background-color: rgb(255, 209, 209);
+  color: white;
+  border: 1px solid red;
+  animation: shake 1s;
+}
+
+@keyframes shake {
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(5px);
+  }
+  50% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
+  100% {
+    transform: translateX(0);
+  }
 }
 
 .add-tasks h2 {
   font-size: 20px;
-  color: #f3f3f3;
+  color: var(--title-color);
   margin: 0 0 5px;
 }
 
@@ -143,7 +225,7 @@ h1 {
 .add-tasks button,
 .tasks button {
   background-color: var(--accent, #ff6b6b);
-  color: white;
+  color: var(--neutral);
   outline: none;
   border: none;
   cursor: pointer;
@@ -191,7 +273,7 @@ h1 {
 .tasks .task {
   width: min(var(--task-width, 200px), 100%);
   aspect-ratio: 1;
-  background-color: var(--color, rgba(0, 0, 0, 0.5));
+  background-color: var(--color, rgba(var(--bg-color), 0.5));
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   padding: 10px;
   border-radius: 8px;
@@ -201,7 +283,7 @@ h1 {
 }
 
 .tasks .blank.task {
-  color: #d3d3d3;
+  color: var(--alt-color);
 }
 
 @media (max-width: 768px) {
@@ -213,21 +295,21 @@ h1 {
 
 .tasks .task .title {
   font-size: 20px;
-  color: #181818;
+  color: var(--t-title-color);
   margin: 0 0 5px;
 }
 
 .tasks .blank.task .title {
-  color: #f3f3f3;
+  color: var(--title-color);
 }
 
 .tasks .blank.task button {
-  background-color: #d3d3d3;
-  color: #181818;
+  background-color: var(--alt-color);
+  color: var(--bg-alt-color);
 }
 
 .tasks .blank.task .info .date {
-  color: #d3d3d3;
+  color: var(--alt-color);
 }
 
 .tasks .task .info {
@@ -249,8 +331,13 @@ h1 {
   width: 40px;
   aspect-ratio: 1;
   border-radius: 50%;
-  background-color: #181818;
-  color: white;
+  background-color: var(--bg-alt-color);
+  color: var(--neutral);
+}
+
+.task button i {
+  user-select: none;
+  pointer-events: none;
 }
 
 .tasks {

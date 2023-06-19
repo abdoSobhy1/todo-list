@@ -5,31 +5,31 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="style.css" />
-    <title>To do list</title>
+    <title>Todo list</title>
   </head>
 
   <body>
     <div class="container">
       <div class="title">
-        <h1>To Do List</h1>
-        <div class="greet">
-          <p>Welcome, <input class="uName" value="Your Name!" disabled /></p>
-          <button class="edit"><i class="fa-solid fa-pen"></i></button>
+        <div>
+          <h1>To Do List</h1>
+          <div class="greet">
+            <p>Welcome, <input class="uName" value="Your Name!" disabled /></p>
+            <button class="edit"><i class="fa-solid fa-pen"></i></button>
+          </div>
+        </div>
+        <div class="theme">
+          <button class="light" data-theme="dark">
+            <i class="fa-solid fa-sun"></i>
+          </button>
+          <button class="dark" data-theme="light">
+            <i class="fa-solid fa-moon"></i>
+          </button>
         </div>
       </div>
       <div class="add-tasks">
-        <input
-          type="text"
-          class="task-title"
-          placeholder="Task title"
-          required
-        />
-        <input
-          type="text"
-          class="task-desc"
-          placeholder="Task content"
-          required
-        />
+        <input type="text" class="task-title" placeholder="Task title" />
+        <input type="text" class="task-desc" placeholder="Task content" />
         <div class="cats">
           <h2>Category</h2>
           <div class="categories">

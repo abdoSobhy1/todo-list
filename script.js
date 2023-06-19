@@ -4,29 +4,49 @@ let tskTitle = document.querySelector(".task-title");
 tskSubmit.addEventListener("click", () => {
   makeTsk();
 });
-tskContnt.addEventListener("keyup", (e) => {
-  if (e.keyCode === 13) {
-    makeTsk();
-  }
-});
 let makeTsk = function () {
   let task = tskContnt.value.trim();
   let taskTitle = tskTitle.value.trim();
   let category = document.querySelector('input[name="cat"]:checked');
   let color = "";
   if (category == null) {
-    color = "rgba(0, 0, 0, 0.5)";
+    color = "rgba(var(--bg-color), 0.5)";
   } else {
     color = category.value;
   }
+  checkInput(tskTitle);
+  checkInput(tskContnt);
   if (task != "" && taskTitle != "") {
     createTask(taskTitle, task, Date.now(), color);
     tskContnt.value = "";
     tskTitle.value = "";
     addTaskarray(taskTitle, task, Date.now(), color);
-    updatebtns();
   }
 };
+
+let checkInput = function (input) {
+  let testCase = input.value.trim();
+  testCase == "" ? input.classList.add("error") : input.classList.remove("error");
+};
+
+tskTitle.addEventListener("keyup", e => {
+  if (e.keyCode === 13) {
+    makeTsk();
+  }
+  checkInput(tskTitle);
+});
+
+tskContnt.addEventListener("keyup", e => {
+  if (e.keyCode === 13) {
+    makeTsk();
+  }
+  checkInput(tskContnt);
+});
+
+tskTitle.addEventListener("blur", () => { checkInput(tskTitle); });
+
+tskContnt.addEventListener("blur", () => { checkInput(tskContnt); });
+
 let tasks = document.querySelector(".tasks");
 let tsksArray = [];
 let createTask = function (taskTitle, task, taskId, category) {
@@ -43,51 +63,37 @@ let createTask = function (taskTitle, task, taskId, category) {
             <button class="del"><i class="fa-solid fa-xmark"></i></button>
           </div>
         `;
-  theTask.className = `${category !== "rgba(0, 0, 0, 0.5)" ? "task" : "task blank"}`;
+  theTask.className = `${category !== "rgba(var(--bg-color), 0.5)" ? "task" : "task blank"}`;
   theTask.style.setProperty("--color", category);
   theTask.id = taskId;
   tasks.prepend(theTask);
 };
 let addTaskarray = function (taskTitle, task, taskId, category) {
   tsksArray.push({ id: taskId, title: taskTitle, task: task, color: category });
-  console.log(tsksArray);
   saveToStrg();
 };
 let saveToStrg = function () {
   window.localStorage.setItem("Tasks", JSON.stringify(tsksArray));
 };
-let loadStrg = function () {
-  tsksArray = JSON.parse(localStorage.getItem("Tasks"));
-  if (tsksArray == null) {
-    tsksArray = [];
-  } else {
-    tsksArray = JSON.parse(window.localStorage.getItem("Tasks"));
-    showTsks();
-  }
-};
-let showTsks = function () {
+let showTsks = function (tsksArray) {
   for (let i = 0; i < tsksArray.length; i++) {
     createTask(tsksArray[i].title, tsksArray[i].task, tsksArray[i].id, tsksArray[i].color);
   }
 };
-loadStrg();
-let updatebtns = function () {
-  let deletes = document.querySelectorAll(".del");
-  deletes.forEach((delBtn) => {
-    delBtn.addEventListener("click", () => {
-      let targetTask = delBtn.parentElement.parentElement;
-      for (let i = 0; i < tsksArray.length; i++) {
-        if (tsksArray[i].id == targetTask.id) {
-          tsksArray.splice(i, 1);
-          saveToStrg();
-        }
-      }
-      targetTask.remove();
-    });
-  });
-};
-updatebtns();
 
+document.addEventListener("click", (e) => {
+  let delBtn = e.target;
+  if (delBtn.classList.contains("del")) {
+    let targetTask = delBtn.parentElement.parentElement;
+    for (let i = 0; i < tsksArray.length; i++) {
+      if (tsksArray[i].id == targetTask.id) {
+        tsksArray.splice(i, 1);
+        saveToStrg();
+      }
+    }
+    targetTask.remove();
+  }
+});
 async function setBackgroundFromAPI() {
   try {
     const response = await fetch('https://api.unsplash.com/photos/random?client_id=GfOIe91RQh8pJF2CQNJnitsVLloxum8ozPIoEaIqq6k&orientation=landscape&query=nature');
@@ -95,7 +101,6 @@ async function setBackgroundFromAPI() {
       throw new Error('API request failed');
     }
     let bg = await response.json().then(data => data['urls']['regular']);
-    console.log(bg);
     document.body.style.backgroundImage = `url(${bg})`;
   } catch (error) {
     console.error('Error:', error);
@@ -144,18 +149,7 @@ let editName = () => {
 
 editBtn.addEventListener("click", () => {
   editName();
-});;
-
-let loadName = () => {
-  let name = window.localStorage.getItem("Name");
-  if (name == null) {
-    name = "Enter Your Name";
-  }
-  uName.setAttribute("value", `${name}!`);
-  uName.style.width = uName.scrollWidth + "px";
-};
-
-loadName();
+});
 
 function setTaskWidth() {
   let width = (tasks.scrollWidth - 80) / 4;
@@ -164,3 +158,36 @@ function setTaskWidth() {
 if (window.innerWidth > 600) {
   setTaskWidth();
 }
+
+document.querySelectorAll(".theme button").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    let theme = btn.getAttribute("data-theme");
+    document.body.setAttribute("data-theme", theme);
+    window.localStorage.setItem("Theme", theme);
+  });
+});
+
+let loadStrg = function () {
+  let storage = {
+    tsksArray: JSON.parse(localStorage.getItem("Tasks")),
+    name: window.localStorage.getItem("Name"),
+    theme: window.localStorage.getItem("Theme")
+  };
+  let { name, theme } = storage;
+  tsksArray = storage.tsksArray;
+  if (tsksArray == null) {
+    tsksArray = [];
+  } else {
+    showTsks(tsksArray);
+  }
+  if (name == null) {
+    name = "Enter Your Name";
+  }
+  uName.setAttribute("value", `${name}!`);
+  uName.style.width = uName.scrollWidth + "px";
+  if (theme == null) {
+    theme = "dark";
+  }
+  document.body.setAttribute("data-theme", theme);
+};
+loadStrg();

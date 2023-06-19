@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>To do list</title>
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="title">
+        <h1>To Do List</h1>
+        <div class="greet">
+          <p>Welcome, <input class="uName" value="Your Name!" disabled /></p>
+          <button class="edit"><i class="fa-solid fa-pen"></i></button>
+        </div>
+      </div>
+      <div class="add-tasks">
+        <input
+          type="text"
+          class="task-title"
+          placeholder="Task title"
+          required
+        />
+        <input
+          type="text"
+          class="task-desc"
+          placeholder="Task content"
+          required
+        />
+        <div class="cats">
+          <h2>Category</h2>
+          <div class="categories">
+            <input
+              type="radio"
+              name="cat"
+              style="--color: #e6ef99"
+              value="#e6ef99"
+            />
+            <input
+              type="radio"
+              name="cat"
+              style="--color: #ffc976"
+              value="#ffc976"
+            />
+            <input
+              type="radio"
+              name="cat"
+              style="--color: #fe9c75"
+              value="#fe9c75"
+            />
+            <input
+              type="radio"
+              name="cat"
+              style="--color: #b693f8"
+              value="#b693f8"
+            />
+            <input
+              type="radio"
+              name="cat"
+              style="--color: #00d4fa"
+              value="#00d4fa"
+            />
+          </div>
+        </div>
+        <button class="add">Add Task</button>
+      </div>
+      <div class="tasks"></div>
+    </div>
+    <script src="script.js"></script>
+    <script
+      src="https://kit.fontawesome.com/ef3d86cebf.js"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
